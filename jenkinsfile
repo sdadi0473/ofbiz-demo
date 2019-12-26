@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+       stages {
+       stage('Preparation') {
+           steps {
+            git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
+         }
+       }
+        stage('Compile') {
+            steps {
+                gradlew('cleanAll', 'loadDefault')
+            }
+        }
+       }
+	   stage('Build and Push Docker Image') {
+        steps {
+          sh label: '', script: '''docker build -t ofbiz-image:$BUILD_NUMBER .
+                                 docker tag ofbiz-image:$BUILD_NUMBER docker.io/ramachandraannadi/ofbiz-image:$BUILD_NUMBER
+                                 sudo docker push docker.io/ramachandraannadi/ofbiz-image:$BUILD_NUMBER'''
+       }
+       }
+	   stage('install_deps') {
+			steps {
+			sh label: '', script: 'sudo yum install wget zip python-pip -y'
+			sh "cd /tmp"
+			sh "curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.17/terraform_0.12.17_linux_amd64.zip"
+			sh "unzip terraform.zip"
+			sh "sudo mv terraform /usr/bin"
+			}
+			}
+			stage('init_and_plan') {
+			steps {
+			sh "sudo terraform init /var/lib/jenkins/workspace"
+			sh "sudo terraform plan /var/lib/jenkins/workspace"
+			}
+			}
+			stage('apply_changes') {
+			steps {
+			sh "sudo terraform apply -auto-approve /var/lib/jenkins/workspace"
+			sh "terraform output > private_ip"
+			}
+			}
+       stage ('login to aws') {
+steps {
+script { 
+ 
+   private_ip = sh(script: "cat /var/lib/jenkins/workspace/ofbiz-demo/private_ip | head -2 |tail -1|tr -d {' '}|tr -d {','}|tr -d {'\"'}|tr -d '\r'", returnStdout: true,).trim()
+   
+     }
+
+
+sh "cp /var/lib/jenkins/docker-deploy.sh ."
+sh "ls"
+
+sh "ssh -T jenkins@${private_ip} 'bash -s' < docker-deploy.sh $BUILD_NUMBER"
+
+    }
+}
+}			
+}   
+def gradlew(String... args) {
+    sh "./gradlew ${args.join(' ')} -s"
+}
+
