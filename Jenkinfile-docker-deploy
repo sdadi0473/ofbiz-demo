@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+       stages {
+       stage('Preparation') {
+           steps {
+            git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
+         }
+       }
+        stage('Compile') {
+            steps {
+                gradlew('cleanAll', 'loadDefault')
+            }
+        }
+       }
+}   
+def gradlew(String... args) {
+    sh "./gradlew ${args.join(' ')} -s"
+}
