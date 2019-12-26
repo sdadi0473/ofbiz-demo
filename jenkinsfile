@@ -57,8 +57,7 @@ sh "ssh -T jenkins@${private_ip} 'bash -s' < docker-deploy.sh $BUILD_NUMBER"
 
     }
 }
-}			
-} 
+}
 def gradlew(String... args) {
     sh "./gradlew ${args.join(' ')} -s"
 }
