@@ -12,11 +12,16 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
-	stage('Unit Test Results') {
-      steps {
-      junit '**/target/surefire-reports/TEST-*.xml'
-      }
- }
+	stage('Unit Tests') {
+            steps {
+                gradlew('test')
+            }
+            post {
+                always {
+                    junit '**/build/test-results/test/TEST-*.xml'
+                }
+            }
+        }
  stage('Sonarqube') {
     environment {
         scannerHome = tool 'sonarqube'
