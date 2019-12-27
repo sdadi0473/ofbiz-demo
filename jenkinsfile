@@ -65,7 +65,12 @@ pipeline {
          sh "terraform output > private_ip"
             }
             }
-       stage ('login to aws') {
+      stage ("wait_prior_starting_smoke_testing") {
+        def time = params.30
+        echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing"
+        sleep time.toInteger() // seconds
+    }
+      stage ('login to aws') {
         steps {
          script { 
  
