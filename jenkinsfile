@@ -67,10 +67,10 @@ pipeline {
             }
       stage ("wait_prior_starting_smoke_testing") {
        steps { 
-         def time = params.SLEEP_TIME_IN_SECONDS
-         echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing"
-        sleep 30 // seconds
-     }
+        sh "def time = params.SLEEP_TIME_IN_SECONDS"
+        sh "echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing""
+        sleep sleep(time:3,unit:"SECONDS")
+	}
     }
       stage ('login to aws') {
         steps {
