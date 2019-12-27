@@ -12,13 +12,32 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
+	stage('Unit Test Results') {
+      steps {
+      junit '**/target/surefire-reports/TEST-*.xml'
+      }
+ }
+ stage('Sonarqube') {
+    environment {
+        scannerHome = tool 'sonarqube'
+    }
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+        }
+        timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
+    }
+}
        stage('Build and Push Docker Image') {
         steps {
           sh label: '', script: '''docker build -t ofbiz-image:$BUILD_NUMBER .
                                  docker tag ofbiz-image:$BUILD_NUMBER docker.io/ramachandraannadi/ofbiz-image:$BUILD_NUMBER
                                  sudo docker push docker.io/ramachandraannadi/ofbiz-image:$BUILD_NUMBER'''
+            }
        }
-       }
+       
 	   stage('install_deps') {
         steps {
          sh label: '', script: 'sudo yum install wget zip python-pip -y'
