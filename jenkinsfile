@@ -12,16 +12,16 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
-	stage('Unit Tests') {
-            steps {
-                gradlew('test')
-            }
-            post {
-                always {
-                    junit '**/build/test-results/test/TEST-*.xml'
-                }
-            }
-        }
+	//stage('Unit Tests') {
+          //  steps {
+            //    gradlew('test')
+            //}
+            //post {
+                //always {
+                    //junit '**/build/test-results/test/TEST-*.xml'
+                //}
+            //}
+        //}
  stage('Sonarqube') {
     environment {
         scannerHome = tool 'sonarqube'
