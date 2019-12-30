@@ -84,7 +84,7 @@ pipeline {
          sh "cp /var/lib/jenkins/docker-deploy.sh ."
          sh "ls"
 
-         sh "ssh -o "StrictHostKeyChecking=no" jenkins@${private_ip} 'bash -s' < docker-deploy.sh $BUILD_NUMBER"
+         sh "ssh -o StrictHostKeyChecking=no jenkins@${private_ip} 'bash -s' < docker-deploy.sh $BUILD_NUMBER"
 
     }
 }
