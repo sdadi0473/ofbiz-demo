@@ -65,7 +65,7 @@ pipeline {
          sh "terraform output > /tmp/private_ip"
             }
             }
-      stage ("wait_prior_starting_smoke_testing") {
+      stage ("wait_to_aws machine to comeup") {
        steps { 
         //sh "def time = params.SLEEP_TIME_IN_SECONDS"
         //sh "echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing""
