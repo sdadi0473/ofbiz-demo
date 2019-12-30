@@ -44,15 +44,15 @@ pipeline {
             }
        }
        
-	   stage('install_deps') {
-        steps {
-         sh label: '', script: 'sudo yum install wget zip python-pip -y'
-         sh "cd /tmp"
-         sh "curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.17/terraform_0.12.17_linux_amd64.zip"
-         sh "unzip terraform.zip"
-         sh "sudo mv terraform /usr/bin"
-            }
-            }
+	   //stage('install_deps') {
+        //steps {
+         //sh label: '', script: 'sudo yum install wget zip python-pip -y'
+         //sh "cd /tmp"
+         //sh "curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.17/terraform_0.12.17_linux_amd64.zip"
+         //sh "unzip terraform.zip"
+         //sh "sudo mv terraform /usr/bin"
+            //}
+            //}
        stage('init_and_plan') {
         steps {
          sh "sudo terraform init /var/lib/jenkins/workspace"
