@@ -62,7 +62,7 @@ pipeline {
        stage('apply_changes') {
         steps {
          sh "sudo terraform apply -auto-approve /var/lib/jenkins/workspace"
-         sh "terraform output > private_ip"
+         sh "terraform output > /tmp/private_ip"
             }
             }
       stage ("wait_prior_starting_smoke_testing") {
@@ -76,7 +76,7 @@ pipeline {
         steps {
          script { 
  
-          private_ip = sh(script: "cat /var/lib/jenkins/workspace/ofbiz-demo/private_ip | head -2 |tail -1|tr -d {' '}|tr -d {','}|tr -d {'\"'}|tr -d '\r'", returnStdout: true,).trim()
+          private_ip = sh(script: "cat /tmp/private_ip | head -2 |tail -1|tr -d {' '}|tr -d {','}|tr -d {'\"'}|tr -d '\r'", returnStdout: true,).trim()
    
      }
 
