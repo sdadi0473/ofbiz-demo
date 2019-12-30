@@ -18,7 +18,7 @@ pipeline {
            }
            post {
             always {
-                   junit '**/build/test-results/test/TEST-*.xml'
+                   junit '**/build/test-results/TEST-*.xml'
                 }
             }
          }
@@ -66,11 +66,11 @@ pipeline {
             }
             }
       stage ("wait_prior_starting_smoke_testing") {
-       steps { 
-        sh "def time = params.SLEEP_TIME_IN_SECONDS"
-        sh "echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing""
+       //steps { 
+        //sh "def time = params.SLEEP_TIME_IN_SECONDS"
+        //sh "echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing""
             sleep(time:30,unit:"SECONDS")
-	}
+	//}
     }
       stage ('login to aws') {
         steps {
