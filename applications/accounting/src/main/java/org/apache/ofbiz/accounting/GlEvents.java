@@ -41,6 +41,8 @@ public class GlEvents {
 
 public static final String module = GlEvents.class.getName();
 public static String createReconcileAccount(HttpServletRequest request, HttpServletResponse response) {
+    
+    System.out.println("I am in createReconcileAccount");
     LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
     final Delegator delegator = (Delegator)request.getAttribute("delegator");
     GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
