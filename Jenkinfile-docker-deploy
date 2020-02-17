@@ -2,8 +2,8 @@
  pipeline {    agent any
 
        stages {
-       stage('Preparation') {
-           steps {
+          stage('Preparation') {
+            steps {
             git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
          }
    stage('Sonarqube') {
