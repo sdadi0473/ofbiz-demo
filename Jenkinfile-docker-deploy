@@ -6,11 +6,11 @@
            steps {
             git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
          }
-       }
    stage('SonarQube analysis') {
     withSonarQubeEnv() { // Will pick the global server connection you have configured
       sh './gradlew sonarqube'
            }
         }
      }
+}
 }
