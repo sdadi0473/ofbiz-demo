@@ -1,18 +1,16 @@
-pipeline {
-    agent any
-    triggers {
-        pollSCM('*/5 * * * *')
-    }
-       stages {
-       stage('Preparation') {
-           steps {
-            git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
-         }
-       }
-   stage('Code Analysis') {
-                    steps {
-                        gradlew('sonarqube')
-                    }
-                }
-           }
+ pipeline {
+  agent any
+  stages {
+    stage('SonarQube analysis') {
+      steps {
+        script {
+          // requires SonarQube Scanner
+          scannerHome = tool 'SonarQube Scanner'
         }
+        withSonarQubeEnv('SonarQube Scanner') {
+          sh "${scannerHome}/bin/sonar-scanner"
+        }
+      }
+    }
+  }
+}
