@@ -1,16 +1,10 @@
  pipeline {
   agent any
   stages {
-    stage('SonarQube analysis') {
+    stage('Artifact upload') {
       steps {
-        script {
-          // requires SonarQube Scanner
-          scannerHome = tool 'SonarQube Scanner'
-        }
-        withSonarQubeEnv('SonarQube Scanner') {
-          sh "${scannerHome}/bin/sonar-scanner"
-        }
+     nexusPublisher nexusInstanceId: '1234', nexusRepositoryId: 'releases', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'gameoflife-web/target/gameoflife.war']], mavenCoordinate: [artifactId: 'gameoflife', groupId: 'com.wakaleo.gameoflife', packaging: 'war', version: '$BUILD_NUMBER']]]
       }
+     }
     }
   }
-}
