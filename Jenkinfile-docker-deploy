@@ -13,7 +13,7 @@
     }
     steps {
         withSonarQubeEnv('sonarqube') {
-            sh "${scannerHome}/bin/sonar-scanner"
+            sh "${scannerHome}/opt/sonar/bin/linux-x86-64/sonar.sh"
         }
         timeout(time: 10, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
