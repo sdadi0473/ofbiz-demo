@@ -1,24 +1,18 @@
 pipeline {
     agent any
-
+    triggers {
+        pollSCM('*/5 * * * *')
+    }
        stages {
        stage('Preparation') {
            steps {
             git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
          }
        }
-   stage('Sonarqube') {
-          environment {
-           scannerHome = tool 'sonarqube'
-          }
-        steps {
-           withSonarQubeEnv('sonarqube') {
-            sh "${scannerHome}/bin/sonar-scanner"
-          }
-            timeout(time: 10, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
+   stage('Code Analysis') {
+                    steps {
+                        gradlew('sonarqube')
+                    }
+                }
            }
         }
-     }
-    }
-   } 
