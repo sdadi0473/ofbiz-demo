@@ -1,5 +1,5 @@
-pipeline {
-    agent any
+
+ pipeline {    agent any
 
        stages {
        stage('Preparation') {
@@ -7,13 +7,18 @@ pipeline {
             git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
          }
        }
-        stage('Compile') {
-            steps {
-                gradlew('cleanAll', 'loadDefault')
-            }
+        stage('Sonarqube') {
+          environment {
+           scannerHome = tool 'sonarqube'
+          }
+        steps {
+           withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
+            timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+           }
         }
-       }
-}   
-def gradlew(String... args) {
-    sh "./gradlew ${args.join(' ')} -s"
+     }
+}
 }
