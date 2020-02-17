@@ -1,18 +1,95 @@
 pipeline {
     agent any
-    triggers {
-        pollSCM('*/5 * * * *')
-    }
+
        stages {
        stage('Preparation') {
            steps {
             git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
          }
        }
-   stage('Code Analysis') {
-                    steps {
-                        gradlew('sonarqube')
-                    }
+        stage('Compile') {
+            steps {
+                gradlew('cleanAll', 'loadDefault')
+            }
+        }
+	stage('Unit Tests') {
+          steps {
+               gradlew('test')
+           }
+           post {
+            always {
+                   junit '**/build/test-results/TEST-*.xml'
                 }
+            }
+         }
+	stage('Sonarqube') {
+          environment {
+           scannerHome = tool 'sonarqube'
+          }
+        steps {
+           withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
+            timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
            }
         }
+     }
+
+        stage('Build and Push Docker Image') {
+        steps {
+          sh label: '', script: '''docker build -t ofbiz-image:$BUILD_NUMBER .
+                                 docker tag ofbiz-image:$BUILD_NUMBER docker.io/ramachandraannadi/ofbiz-image:$BUILD_NUMBER
+                                 sudo docker push docker.io/ramachandraannadi/ofbiz-image:$BUILD_NUMBER'''
+            }
+       }
+       
+	   //stage('install_deps') {
+        //steps {
+         //sh label: '', script: 'sudo yum install wget zip python-pip -y'
+         //sh "cd /tmp"
+         //sh "curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.17/terraform_0.12.17_linux_amd64.zip"
+         //sh "unzip terraform.zip"
+         //sh "sudo mv terraform /usr/bin"
+            //}
+            //}
+       stage('init_and_plan') {
+        steps {
+         sh "sudo terraform init /var/lib/jenkins/workspace"
+         sh "sudo terraform plan /var/lib/jenkins/workspace"
+            }
+            }
+       stage('apply_changes') {
+        steps {
+         sh "sudo terraform apply -auto-approve /var/lib/jenkins/workspace"
+         sh "terraform output > /tmp/private_ip"
+            }
+            }
+      stage ("wait_to_aws machine to comeup") {
+       steps { 
+        //sh "def time = params.SLEEP_TIME_IN_SECONDS"
+        //sh "echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing""
+            sleep(time:90,unit:"SECONDS")
+	}
+    }
+      stage ('login to aws') {
+        steps {
+         script { 
+ 
+          private_ip = sh(script: "cat /tmp/private_ip | head -2 |tail -1|tr -d {' '}|tr -d {','}|tr -d {'\"'}|tr -d '\r'", returnStdout: true,).trim()
+   
+     }
+
+
+         sh "cp /var/lib/jenkins/docker-deploy.sh ."
+         sh "ls"
+
+         sh "ssh -o StrictHostKeyChecking=no jenkins@${private_ip} 'bash -s' < docker-deploy.sh $BUILD_NUMBER"
+
+    }
+}
+}			
+} 
+def gradlew(String... args) {
+    sh "./gradlew ${args.join(' ')} -s"
+}
