@@ -3,7 +3,7 @@
   stages {
     stage('Artifact upload') {
       steps {
-     nexusPublisher nexusInstanceId: '1234', nexusRepositoryId: 'releases', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'gameoflife-web/target/gameoflife.war']], mavenCoordinate: [artifactId: 'gameoflife', groupId: 'com.wakaleo.gameoflife', packaging: 'war', version: '$BUILD_NUMBER']]]
+     nexusPublisher nexusInstanceId: '1234', nexusRepositoryId: 'releases', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'ofbiz-demo-web/target/ofbiz-demo.war']], mavenCoordinate: [artifactId: 'ofbiz', groupId: 'com.ram.ofbiz', packaging: 'war', version: '$BUILD_NUMBER']]]
       }
      }
     }
