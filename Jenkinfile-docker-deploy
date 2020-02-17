@@ -1,21 +1,24 @@
-
- pipeline {    agent any
+pipeline {
+    agent any
 
        stages {
-          stage('Preparation') {
-            steps {
+       stage('Preparation') {
+           steps {
             git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
          }
+       }
    stage('Sonarqube') {
-    environment {
-        scannerHome = tool 'SonarQubeScanner'
-    }
-    steps {
-        withSonarQubeEnv('sonarqube') {
+          environment {
+           scannerHome = tool 'sonarqube'
+          }
+        steps {
+           withSonarQubeEnv('sonarqube') {
             sh "${scannerHome}/bin/sonar-scanner"
-        }
+          }
+            timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
            }
         }
      }
-}
-}
+    }
+   } 
