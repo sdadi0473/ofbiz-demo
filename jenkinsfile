@@ -25,6 +25,7 @@ pipeline {
 	stage('Sonarqube') {
           environment {
            scannerHome = tool 'sonarqube'
+	   sh "echo ${scannerhome}"
           }
         steps {
            withSonarQubeEnv('sonarqube') {
