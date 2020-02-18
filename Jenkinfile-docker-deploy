@@ -23,25 +23,16 @@ pipeline {
             }
          }
 	stage('Sonarqube') {
-
- 
-      environment {
-
- 
-        scannerHome = tool 'sonarqube'
-
- 
-             }
- steps {
-
- 
-   withSonarQubeEnv('sonarqube') {
-
- 
-     sh "${scannerHome}/bin/sonar-scanner"
- }
-  }
-  }
+          environment {
+           scannerHome = tool 'SonarQubeScanner'
+          }
+        steps {
+           withSonarQubeEnv('SonarQubeScanner') {
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
+            
+        }
+     }
         stage('Build and Push Docker Image') {
         steps {
           sh label: '', script: '''docker build -t ofbiz-image:$BUILD_NUMBER .
