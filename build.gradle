@@ -179,10 +179,7 @@ dependencies {
         compile project(path: subProject.path, configuration: 'pluginLibsCompile')
         runtime project(path: subProject.path, configuration: 'pluginLibsRuntime')
     }
-    plugins {
-    id "org.sonarqube" version "2.7"
-    }
-
+    
     // libs needed for junitreport
     junitReport 'junit:junit:4.12'
     junitReport 'org.apache.ant:ant-junit:1.9.7'
