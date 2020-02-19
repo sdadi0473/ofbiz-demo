@@ -12,6 +12,7 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
+     stage('sonar and unit test parallel running') {	
      parallel {
 	stage('Unit Tests') {
           steps {
@@ -32,13 +33,13 @@ pipeline {
 	    sh "echo ${scannerhome}"
             sh "${scannerHome}/bin/sonar-scanner"
           }
-            timeout(time: 5, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
+          \\  timeout(time: 5, unit: 'MINUTES') {
+           \\ waitForQualityGate abortPipeline: true
            }
         }
      }
      }
-
+  }
         stage('Build and Push Docker Image') {
         steps {
           sh label: '', script: '''docker build -t ofbiz-image:$BUILD_NUMBER .
