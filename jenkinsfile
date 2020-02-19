@@ -12,6 +12,7 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
+     parallel {
 	stage('Unit Tests') {
           steps {
                gradlew('test')
@@ -35,6 +36,7 @@ pipeline {
             waitForQualityGate abortPipeline: true
            }
         }
+     }
      }
 
         stage('Build and Push Docker Image') {
