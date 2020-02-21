@@ -35,9 +35,8 @@ pipeline {
      //}
      stage('jfrog'){
      steps{
-     rtUpload (
 
-    //serverId: 'jfrog-artifactory-servers',
+    serverId: 'jfrog-artifactory-servers',
       def uploadSpec = """{
     "files": [
       {
@@ -47,6 +46,7 @@ pipeline {
  ]
 }"""
 server.upload(uploadSpec)
+}
 }
         stage('Build and Push Docker Image') {
         steps {
