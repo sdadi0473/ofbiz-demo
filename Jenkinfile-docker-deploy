@@ -4,7 +4,7 @@ pipeline {
        stages {
        stage('Preparation') {
            steps {
-            git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
+            git 'https://github.com/darshankare/ofbiz-demo.git'
          }
        }
         stage('Compile') {
