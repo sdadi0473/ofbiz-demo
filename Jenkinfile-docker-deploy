@@ -4,7 +4,7 @@ pipeline {
        stages {
        stage('Preparation') {
            steps {
-            git 'https://github.com/darshankare/ofbiz-demo.git'
+            git 'https://github.com/RamachandraAnnadi/ofbiz-demo.git'
          }
        }
         stage('Compile') {
@@ -12,6 +12,8 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
+     stage('sonar and unit test parallel running') {	
+     parallel {
 	stage('Unit Tests') {
           steps {
                gradlew('test')
@@ -28,13 +30,17 @@ pipeline {
           }
         steps {
            withSonarQubeEnv('sonarqube') {
+	    sh "echo ${scannerhome}"
             sh "${scannerHome}/bin/sonar-scanner"
           }
-            
-       }
+            timeout(time: 5, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+           }
+        }
      }
-    
-      stage('Build and Push Docker Image') {
+     }
+  }
+        stage('Build and Push Docker Image') {
         steps {
           sh label: '', script: '''docker build -t ofbiz-image:$BUILD_NUMBER .
                                  docker tag ofbiz-image:$BUILD_NUMBER docker.io/ramachandraannadi/ofbiz-image:$BUILD_NUMBER
@@ -51,19 +57,19 @@ pipeline {
          //sh "sudo mv terraform /usr/bin"
             //}
             //}
-       stage('init_and_plan') {
+       stage('Terraform_init_and_plan') {
         steps {
          sh "sudo terraform init /var/lib/jenkins/workspace"
          sh "sudo terraform plan /var/lib/jenkins/workspace"
             }
             }
-       stage('apply_changes') {
+       stage('Terraform_apply_changes') {
         steps {
          sh "sudo terraform apply -auto-approve /var/lib/jenkins/workspace"
          sh "terraform output > /tmp/private_ip"
             }
             }
-      stage ("wait_to_aws machine to comeup") {
+      stage ("preparing for EC2 creation") {
        steps { 
         //sh "def time = params.SLEEP_TIME_IN_SECONDS"
         //sh "echo "Waiting ${SLEEP_TIME_IN_SECONDS} seconds for deployment to complete prior starting smoke testing""
@@ -85,8 +91,9 @@ pipeline {
          sh "ssh -o StrictHostKeyChecking=no jenkins@${private_ip} 'bash -s' < docker-deploy.sh $BUILD_NUMBER"
 
     }
+}
+}			
 } 
 def gradlew(String... args) {
     sh "./gradlew ${args.join(' ')} -s"
-}
 }
