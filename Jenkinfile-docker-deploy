@@ -40,10 +40,10 @@ pipeline {
     serverId: 'jfrog-artifactory-servers',
      def gradle_proxy = Artifactory.newGradleBuild()
 
-     gradle_proxy.deployer repo: 'gradle-dev',
+     gradle_proxy.deployer repo= 'gradle-dev',
         gradle_proxy.useWrapper = true
         
-        def build_info = gradle_proxy.run tasks: "artifactoryPublish"
+        def build_info = gradle_proxy.run tasks= "artifactoryPublish"
         
         artifactory_server.publishBuildInfo build_info
 
