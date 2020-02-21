@@ -22,30 +22,30 @@ pipeline {
                 }
             }
          }
-	//stage('Sonarqube') {
-          //environment {
-           //scannerHome = tool 'sonarqube'
-          //}
-        //steps {
-          // withSonarQubeEnv('sonarqube') {
-            //sh "${scannerHome}/bin/sonar-scanner"
-          //}
+	stage('Sonarqube') {
+          environment {
+           scannerHome = tool 'sonarqube'
+          }
+        steps {
+           withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
             
-       // }
-     //}
-     stage('jfrog'){
-     steps{
-     rtUpload (
+        }
+     }
+    // stage('jfrog'){
+     //steps{
+     //rtUpload (
 
-    serverId: 'jfrog-artifactory-servers',
-     def gradle_proxy = Artifactory.newGradleBuild()
+    //serverId: 'jfrog-artifactory-servers',
+     //def gradle_proxy = Artifactory.newGradleBuild()
 
-     gradle_proxy.deployer repo= 'gradle-dev',)
-        gradle_proxy.useWrapper = true
+     //gradle_proxy.deployer repo= 'gradle-dev',)
+       // gradle_proxy.useWrapper = true
         
-        def build_info = gradle_proxy.run tasks= "artifactoryPublish"
+        //def build_info = gradle_proxy.run tasks= "artifactoryPublish"
         
-        artifactory_server.publishBuildInfo build_info
+        //artifactory_server.publishBuildInfo build_info
 
  
 
