@@ -40,7 +40,7 @@ pipeline {
     serverId: 'jfrog-artifactory-servers',
      def gradle_proxy = Artifactory.newGradleBuild()
 
-     gradle_proxy.deployer repo= 'gradle-dev',
+     gradle_proxy.deployer repo= 'gradle-dev',)
         gradle_proxy.useWrapper = true
         
         def build_info = gradle_proxy.run tasks= "artifactoryPublish"
@@ -61,7 +61,7 @@ pipeline {
 
 	// buildNumber: '42'
 
-)
+
 }
 }
         stage('Build and Push Docker Image') {
