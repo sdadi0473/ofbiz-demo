@@ -22,46 +22,31 @@ pipeline {
                 }
             }
          }
-	stage('Sonarqube') {
-          environment {
-           scannerHome = tool 'sonarqube'
-          }
-        steps {
-           withSonarQubeEnv('sonarqube') {
-            sh "${scannerHome}/bin/sonar-scanner"
-          }
+	//stage('Sonarqube') {
+         // environment {
+          // scannerHome = tool 'sonarqube'
+          //}
+        //steps {
+         //  withSonarQubeEnv('sonarqube') {
+          //  sh "${scannerHome}/bin/sonar-scanner"
+         // }
             
-        }
-     }
-    // stage('jfrog'){
-     //steps{
-     //rtUpload (
+      //  }
+     //}
+     stage('jfrog'){
+     steps{
+     rtUpload (
 
     //serverId: 'jfrog-artifactory-servers',
-     //def gradle_proxy = Artifactory.newGradleBuild()
-
-     //gradle_proxy.deployer repo= 'gradle-dev',)
-       // gradle_proxy.useWrapper = true
-        
-        //def build_info = gradle_proxy.run tasks= "artifactoryPublish"
-        
-        //artifactory_server.publishBuildInfo build_info
-
- 
-
-    // Optional - Associate the uploaded files with the following custom build name and build number,
-
-    // as build artifacts.
-
-    // If not set, the files will be associated with the default build name and build number (i.e the
-
-    // the Jenkins job name and number).
-
-    // buildName: 'holyFrog',
-
-	// buildNumber: '42'
-
-
+      def uploadSpec = """{
+    "files": [
+      {
+       "pattern": "*.jar",
+       "target": "gradle-dev/"
+    }
+ ]
+}"""
+server.upload(uploadSpec)
 }
 }
         stage('Build and Push Docker Image') {
