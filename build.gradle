@@ -27,6 +27,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply from: 'common.gradle'
+apply plugin: 'com.jfrog.artifactory'
 
 // global properties
 ext.os = System.getProperty('os.name').toLowerCase()
