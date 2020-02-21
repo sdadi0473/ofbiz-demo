@@ -38,22 +38,14 @@ pipeline {
      rtUpload (
 
     serverId: 'jfrog-artifactory-servers',
+     def gradle_proxy = Artifactory.newGradleBuild()
 
-    spec: '''{
-
-          "files": [
-
-            {
-
-              "pattern": "*.jar",
-
-              "target": "gradle-dev"
-
-            }
-
-         ]
-
-    }''',
+     gradle_proxy.deployer repo: 'gradle-dev',
+        gradle_proxy.useWrapper = true
+        
+        def build_info = gradle_proxy.run tasks: "artifactoryPublish"
+        
+        artifactory_server.publishBuildInfo build_info
 
  
 
