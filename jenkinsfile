@@ -49,7 +49,7 @@ pipeline {
           "files": [
             {
               "pattern": "/var/lib/jenkins/workspace/ofbiz-demo/build/libs/ofbiz.jar",
-              "target": "ofbiz-repo/crm-files/"
+              "target": "ofbiz-repo-crm-files"
             }
          ]
     }''',
