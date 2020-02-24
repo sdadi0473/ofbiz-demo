@@ -42,7 +42,8 @@ pipeline {
   //}
   
   stage('jfrog artifactory') {
-  steps { rtUpload (
+  steps { 
+   rtUpload (
     serverId: 'jfrog-artifactory-servers',
     spec: '''{
           "files": [
