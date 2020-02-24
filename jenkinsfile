@@ -12,34 +12,34 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
-     //stage('sonar and unit test parallel running') {	
-     //parallel {
-	//stage('Unit Tests') {
-          //steps {
-               //gradlew('test')
-           //}
-           //post {
-            //always {
-                   //junit '**/build/test-results/TEST-*.xml'
-                //}
-            //}
-         //}
-	//stage('Sonarqube') {
-          //environment {
-           //scannerHome = tool 'sonarqube'
-          //}
-        //steps {
-           //withSonarQubeEnv('sonarqube') {
-	    //sh "echo ${scannerhome}"
-            //sh "${scannerHome}/bin/sonar-scanner"
-          //}
-           // timeout(time: 5, unit: 'MINUTES') {
-           // waitForQualityGate abortPipeline: true
-           //}
-        //}
-     //}
-     //}
-  //}
+     stage('sonar and unit test parallel running') {	
+     parallel {
+	stage('Unit Tests') {
+          steps {
+               gradlew('test')
+           }
+           post {
+            always {
+                   junit '**/build/test-results/TEST-*.xml'
+                }
+            }
+         }
+	stage('Sonarqube') {
+          environment {
+           scannerHome = tool 'sonarqube'
+          }
+        steps {
+           withSonarQubeEnv('sonarqube') {
+	    sh "echo ${scannerhome}"
+            sh "${scannerHome}/bin/sonar-scanner"
+          }
+            timeout(time: 5, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+           }
+        }
+     }
+     }
+  }
   
   stage('jfrog artifactory') {
   steps { 
