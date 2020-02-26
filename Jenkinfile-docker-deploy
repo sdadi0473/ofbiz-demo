@@ -12,7 +12,7 @@ pipeline {
                 gradlew('cleanAll', 'loadDefault')
             }
         }
-    stage('sonar and unit test parallel running') {	
+     stage('sonar and unit test parallel running') {	
      parallel {
 	stage('Unit Tests') {
           steps {
@@ -33,10 +33,9 @@ pipeline {
 	    sh "echo ${scannerhome}"
             sh "${scannerHome}/bin/sonar-scanner"
           }
-            sleep(10) 
-            qualitygate = waitForQualityGate()
-	    if (qualitygate.status != "OK")
-           
+           // timeout(time: 5, unit: 'MINUTES') {
+           // waitForQualityGate abortPipeline: true
+           //}
         }
      }
      }
