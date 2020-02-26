@@ -33,9 +33,12 @@ pipeline {
 	    sh "echo ${scannerhome}"
             sh "${scannerHome}/bin/sonar-scanner"
           }
-            timeout(time: 5, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-           }
+            sleep(10) 
+            qualitygate = waitForQualityGate()
+	    if (qualitygate.status != "OK") {
+	     ...
+	     }
+           
         }
      }
      }
