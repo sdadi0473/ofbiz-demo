@@ -29,6 +29,7 @@ under the License.
 <center>
   <div class="screenlet login-screenlet">
     <div class="screenlet-title-bar">
+      <h2>This is my change</h2> <!--this line is added by developer-->
       <h3>${uiLabelMap.CommonRegistered}</h3>
     </div>
     <div class="screenlet-body">
