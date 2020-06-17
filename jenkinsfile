@@ -24,21 +24,21 @@ pipeline {
                 }
             }
          }
-	stage('Sonarqube') {
-          environment {
-           scannerHome = tool 'sonarqube'
-          }
-        steps {
-           withSonarQubeEnv('sonarqube') {
-	    sh "echo ${scannerhome}"
-            sh "${scannerHome}/bin/sonar-scanner"
-          }
-            timeout(time: 30, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-           }
+	//stage('Sonarqube') {
+          //environment {
+           //scannerHome = tool 'sonarqube'
+          //}
+        //steps {
+           //withSonarQubeEnv('sonarqube') {
+	    //sh "echo ${scannerhome}"
+            //sh "${scannerHome}/bin/sonar-scanner"
+          //}
+            //timeout(time: 30, unit: 'MINUTES') {
+            //waitForQualityGate abortPipeline: true
+           //}
 	   
-	   }
-     }
+	   //}
+     //}
      }
   }
   
