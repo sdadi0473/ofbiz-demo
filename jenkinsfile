@@ -42,27 +42,27 @@ pipeline {
      }
   }
   
-  //stage('jfrog artifactory') {
-  //steps { 
-   //rtUpload (
-    //serverId: 'jfrog-artifactory-servers',
-    //spec: '''{
-          //"files": [
-            //{
-              //"pattern": "/var/lib/jenkins/workspace/ofbiz-demo/build/libs/ofbiz.jar",
-              //"target": "ofbiz-repo-crm-files"
-            //}
-         //]
-    //}''',
+  stage('jfrog artifactory') {
+  steps { 
+   rtUpload (
+    serverId: 'jfrog-artifactory-servers',
+    spec: '''{
+          "files": [
+            {
+              "pattern": "/var/lib/jenkins/workspace/ofbiz-demo/build/libs/ofbiz.jar",
+              "target": "ofbiz-repo-crm-files"
+            }
+         ]
+    }''',
  
     // Optional - Associate the uploaded files with the following custom build name and build number,
     // as build artifacts.
     // If not set, the files will be associated with the default build name and build number (i.e the
     // the Jenkins job name and number).
-    //buildName: 'ofbiz',
-      //)
-     //}
-    //}
+    buildName: 'ofbiz',
+      )
+     }
+    }
         stage('Build and Push Docker Image') {
         steps {
           sh label: '', script: '''docker build -t ofbiz-image:$BUILD_NUMBER .
